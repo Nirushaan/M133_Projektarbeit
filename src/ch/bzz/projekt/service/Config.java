@@ -1,5 +1,7 @@
 package ch.bzz.projekt.service;
 
+import ch.bzz.projekt.model.Tier;
+
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 import java.io.FileInputStream;
@@ -9,6 +11,13 @@ import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
 
+/**
+ * configure the web services and properties
+ * <p>
+ * M151: BookDB
+ *
+ * @author Marcel Suter (Ghwalin)
+ */
 
 @ApplicationPath("/resource")
 
@@ -25,6 +34,7 @@ public class Config extends Application {
     public Set<Class<?>> getClasses() {
         HashSet providers = new HashSet<Class<?>>();
         providers.add(TestService.class);
+        providers.add(TierService.class);
         return providers;
     }
 

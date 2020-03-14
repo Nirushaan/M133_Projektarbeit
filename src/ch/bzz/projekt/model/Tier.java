@@ -1,5 +1,7 @@
 package ch.bzz.projekt.model;
 
+import javax.ws.rs.FormParam;
+
 /**
  * short description
  * <p>
@@ -10,51 +12,60 @@ package ch.bzz.projekt.model;
  * @since 27.02.20
  */
 public class Tier {
-    private String animal;
-    private int animalID;
+    @FormParam("tier")
+    private String tier;
+
+
+    private String tierID;
+
+    @FormParam("name")
     private String name;
-    private int age;
-    private String gender;
-    private double height;
-    private String birthday;
-    private String food;
+
+    @FormParam("alter")
+    private int alter;
+
+    @FormParam("geschlecht")
+    private String geschlecht;
+
+    @FormParam("groesse")
+    private double groesse;
 
     /**
-     * Gets the animal
+     * Gets the tier
      *
-     * @return value of animal
+     * @return value of tier
      */
-    public String getAnimal() {
-        return animal;
+    public String getTier() {
+        return tier;
     }
 
     /**
-     * Sets the animal
+     * Sets the tier
      *
-     * @param animal the value to set
+     * @param tier the value to set
      */
 
-    public void setAnimal(String animal) {
-        this.animal = animal;
+    public void setTier(String tier) {
+        this.tier = tier;
     }
 
     /**
-     * Gets the animalID
+     * Gets the tierID
      *
-     * @return value of animalID
+     * @return value of tierID
      */
-    public int getAnimalID() {
-        return animalID;
+    public String  getTierID() {
+        return tierID;
     }
 
     /**
-     * Sets the animalID
+     * Sets the tierID
      *
-     * @param animalID the value to set
+     * @param tierID the value to set
      */
 
-    public void setAnimalID(int animalID) {
-        this.animalID = animalID;
+    public void setTierID(String  tierID) {
+        this.tierID = tierID;
     }
 
     /**
@@ -77,97 +88,62 @@ public class Tier {
     }
 
     /**
-     * Gets the age
+     * Gets the alter
      *
-     * @return value of age
+     * @return value of alter
      */
-    public int getAge() {
-        return age;
+    public int getAlter() {
+        return alter;
     }
 
     /**
-     * Sets the age
+     * Sets the alter
      *
-     * @param age the value to set
+     * @param alter the value to set
      */
 
-    public void setAge(int age) {
-        this.age = age;
+    public void setAlter(int alter) {
+        this.alter = alter;
     }
 
     /**
-     * Gets the gender
+     * Gets the geschlecht
      *
-     * @return value of gender
+     * @return value of geschlecht
      */
-    public String getGender() {
-        return gender;
+    public String getGeschlecht() {
+        return geschlecht;
     }
 
     /**
-     * Sets the gender
+     * Sets the geschlecht
      *
-     * @param gender the value to set
+     * @param geschlecht the value to set
      */
 
-    public void setGender(String gender) {
-        this.gender = gender;
+    public void setGeschlecht(String geschlecht) {
+        this.geschlecht = geschlecht;
     }
 
     /**
-     * Gets the height
+     * Gets the groesse
      *
-     * @return value of height
+     * @return value of groesse
      */
-    public double getHeight() {
-        return height;
+    public double getGroesse() {
+        return groesse;
     }
 
     /**
-     * Sets the height
+     * Sets the groesse
      *
-     * @param height the value to set
+     * @param groesse the value to set
      */
 
-    public void setHeight(double height) {
-        this.height = height;
+    public void setGroesse(double groesse) {
+        this.groesse = groesse;
     }
 
-    /**
-     * Gets the birthday
-     *
-     * @return value of birthday
-     */
-    public String getBirthday() {
-        return birthday;
-    }
 
-    /**
-     * Sets the birthday
-     *
-     * @param birthday the value to set
-     */
 
-    public void setBirthday(String birthday) {
-        this.birthday = birthday;
-    }
-
-    /**
-     * Gets the food
-     *
-     * @return value of food
-     */
-    public String getFood() {
-        return food;
-    }
-
-    /**
-     * Sets the food
-     *
-     * @param food the value to set
-     */
-
-    public void setFood(String food) {
-        this.food = food;
-    }
 }

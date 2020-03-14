@@ -1,37 +1,25 @@
-
 package ch.bzz.projekt.service;
 
-        import ch.bzz.projekt.data.DataHandler;
-        import ch.bzz.projekt.model.Tier;
-        import ch.bzz.projekt.model.Zoo;
-        import ch.bzz.projekt.model.Publisher;
 
-        import javax.ws.rs.*;
-        import javax.ws.rs.core.MediaType;
-        import javax.ws.rs.core.Response;
-        import java.math.BigDecimal;
-        import java.util.Map;
-        import java.util.UUID;
+import ch.bzz.projekt.model.Tier;
+import ch.bzz.projekt.model.Zoowaerter;
+import org.intellij.lang.annotations.Pattern;
 
-
-        import javax.ws.rs.*;
-        import javax.ws.rs.core.MediaType;
-        import javax.ws.rs.core.Response;
-        import java.math.BigDecimal;
-        import java.util.Map;
-        import java.util.UUID;
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import java.util.Map;
+import java.util.UUID;
 
 /**
- * short description
+ * provides services for the bookshelf
  * <p>
- * Projektarbeit
+ * M133: Bookshelf
  *
- * @author TODO
- * @version 1.0
- * @since 12.03.20
+ * @author Marcel Suter
  */
+@Path("book")
 public class TierService {
-
 
     /**
      * produces a map of all books
@@ -42,37 +30,33 @@ public class TierService {
     @Path("list")
     @Produces(MediaType.APPLICATION_JSON)
 
-    public Response listBooks(
+    public Response listTier(
     ) {
-        Map<String, Book> bookMap = new Bookshelf().getBookMap();
+        Map<String, Tier> tierMap = new Zoowaerter().getTierMap();
         Response response = Response
                 .status(200)
-                .entity(bookMap)
+                .entity(tierMap)
                 .build();
         return response;
 
     }
 
-    /**
-     * reads a single book identified by the bookId
-     *
-     * @param bookUUID the bookUUID in the URL
-     * @return Response
-     */
+
     @GET
     @Path("read")
     @Produces(MediaType.APPLICATION_JSON)
 
-    public Response readBook(
-            @QueryParam("uuid") String bookUUID
+    public Response readTier(
+            @Pattern(regexp = "[0-9a-fA-F]{8}-(0-9a-fA-F{4}-){3}[0-9a-fA-F]{12}")
+            @QueryParam("tierID") String tierID
     ) {
-        Book book = null;
+        Tier tier = null;
         int httpStatus;
 
         try {
-            UUID.fromString(bookUUID);
-            book = new Bookshelf().getBookByUUID(bookUUID);
-            if (book != null) {
+            UUID.fromString(tierID);
+            tier = new Zoowaerter().getTierByTierID(tierID);
+            if (tier != null) {
                 httpStatus = 200;
             } else {
                 httpStatus = 404;
@@ -83,45 +67,29 @@ public class TierService {
 
         Response response = Response
                 .status(httpStatus)
-                .entity(book)
+                .entity(tier)
                 .build();
         return response;
     }
 
     /**
      * creates a new book
-     * @param title the book title
-     * @param author the author
+     * @param book valid a Book-Object
      * @param publisherUUID the unique key of the publisher
-     * @param price the price
-     * @param isbn the isbn-13 number
      * @return Response
      */
     @POST
     @Path("create")
     @Produces(MediaType.TEXT_PLAIN)
-    public Response createBook(
-            @FormParam("title") String title,
-            @FormParam("author") String author,
-            @FormParam("publisherUUID") String publisherUUID,
-            @FormParam("price") BigDecimal price,
-            @FormParam("isbn") String isbn
+    public Response createTier(
+            @Valid @BeanParam Tier tier
+
     ) {
         int httpStatus = 200;
-        Book book = new Book();
-        Bookshelf bookshelf = new Bookshelf();
-        book.setBookUUID(UUID.randomUUID().toString());
-        setValues(
-                book,
-                title,
-                author,
-                publisherUUID,
-                price,
-                isbn
-        );
-
-        bookshelf.getBookMap().put(book.getBookUUID(), book);
-        DataHandler.writeBooks(bookshelf.getBookMap());
+        Zoowaerter zoowaerter = new Zoowaerter();
+        tier.setTierID(UUID.randomUUID().toString());
+        zoowaerter.getTierMap().put(tier.getTierID(), tier);
+        DataHandler.writeBooks(zoowaerter.getTierMap());
 
         Response response = Response
                 .status(httpStatus)
@@ -132,40 +100,27 @@ public class TierService {
 
     /**
      * updates an existing book
-     * @param title the book title
-     * @param author the author
+     * @param book valid a Book-Object
      * @param publisherUUID the unique key of the publisher
-     * @param price the price
-     * @param isbn the isbn-13 number
      * @return Response
      */
     @PUT
     @Path("update")
     @Produces(MediaType.TEXT_PLAIN)
-    public Response updateBook(
+    public Response updateTier(
+            @Pattern(regexp = "[0-9a-fA-F]{8}-(0-9a-fA-F{4}-){3}[0-9a-fA-F]{12}")
             @FormParam("bookUUID") String bookUUID,
-            @FormParam("title") String title,
-            @FormParam("author") String author,
-            @FormParam("publisherUUID") String publisherUUID,
-            @FormParam("price")BigDecimal price,
-            @FormParam("isbn") String isbn
+            @Valid @BeanParam Book book,
+            @Pattern(regexp = "[0-9a-fA-F]{8}-(0-9a-fA-F{4}-){3}[0-9a-fA-F]{12}")
+            @FormParam("publisherUUID") String publisherUUID
     ) {
         int httpStatus = 200;
-        Book book;
         try {
             UUID.fromString(bookUUID);
             Bookshelf bookshelf = new Bookshelf();
             book = bookshelf.getBookByUUID(bookUUID);
             if (book != null) {
                 httpStatus = 200;
-                setValues(
-                        book,
-                        title,
-                        author,
-                        publisherUUID,
-                        price,
-                        isbn
-                );
                 DataHandler.writeBooks(bookshelf.getBookMap());
             } else {
                 httpStatus = 404;
@@ -189,7 +144,8 @@ public class TierService {
     @DELETE
     @Path("delete")
     @Produces(MediaType.TEXT_PLAIN)
-    public Response deleteBook(
+    public Response deleteTier(
+            @Pattern(regexp = "[0-9a-fA-F]{8}-(0-9a-fA-F{4}-){3}[0-9a-fA-F]{12}")
             @QueryParam("uuid") String bookUUID
     ) {
         int httpStatus;
@@ -215,28 +171,5 @@ public class TierService {
         return response;
     }
 
-    /**
-     * sets the attribute values of the book object
-     * @param book  the book object
-     * @param title the book title
-     * @param author the author
-     * @param publisherUUID the unique key of the publisher
-     * @param price the price
-     * @param isbn the isbn-13 number
-     */
-    private void setValues(
-            Book book,
-            String title,
-            String author,
-            String publisherUUID,
-            BigDecimal price,
-            String isbn) {
-        book.setTitle(title);
-        book.setAuthor(author);
-        book.setPrice(price);
-        book.setIsbn(isbn);
 
-        Publisher publisher = DataHandler.getPublisherMap().get(publisherUUID);
-        book.setPublisher(publisher);
-    }
 }

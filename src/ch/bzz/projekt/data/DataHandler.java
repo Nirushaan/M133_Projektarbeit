@@ -1,13 +1,14 @@
 package ch.bzz.projekt.data;
 
 /**
- * short description
+ * data handler for reading and writing the csv files
  * <p>
- * Projektarbeit
+ * M133: Projekt
  *
- * @author TODO
- * @version 1.0
- * @since 12.03.20
+ * @author Nirushaan Sureshkumar
  */
+
 public class DataHandler {
+
 }
+
